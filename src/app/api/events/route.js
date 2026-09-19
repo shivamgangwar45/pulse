@@ -4,6 +4,7 @@ import Event from "@/models/Event";
 import Ticket from "@/models/Ticket";
 import { NextResponse } from "next/server";
 
+// 1. GET Method (Fetch all events)
 export async function GET() {
   try {
     await connectDB();
@@ -27,5 +28,24 @@ export async function GET() {
   } catch (error) {
     console.error("Fetch Events Error:", error);
     return NextResponse.json({ error: "Failed to fetch events" }, { status: 500 });
+  }
+}
+
+// 2. POST Method (Event Publish / Create karne ke liye)
+export async function POST(req) {
+  try {
+    await connectDB();
+    const body = await req.json();
+
+    // Event create karein
+    const newEvent = await Event.create(body);
+
+    return NextResponse.json(newEvent, { status: 201 });
+  } catch (error) {
+    console.error("Create Event Error:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to create event" },
+      { status: 500 }
+    );
   }
 }
